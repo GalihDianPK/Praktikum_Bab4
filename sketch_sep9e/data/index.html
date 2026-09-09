@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32 Robot Arm</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            text-align: center; 
+        }
+        input { 
+            width: 80%; 
+        }
+        button { 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            font-size: 16px; 
+        }
+    </style>
+</head>
+<body>
+    <h2>ESP32 2DOF Robot Arm</h2>
+    
+    <p>Base Servo</p>
+    <input type="range" min="0" max="180" value="90" id="baseSlider" oninput="updateServo()">
+    
+    <p>Shoulder Servo</p>
+    <input type="range" min="0" max="180" value="90" id="shoulderSlider" oninput="updateServo()">
+    
+    <br><br>
+    <button onclick="resetArm()">Reset Arm</button>
+    
+    <script>
+        function updateServo() {
+            var base = document.getElementById("baseSlider").value;
+            var shoulder = document.getElementById("shoulderSlider").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/set?base=" + base + "&shoulder=" + shoulder, true);
+            xhr.send();
+        }
+        
+        function resetArm() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/reset", true);
+            xhr.send();
+            
+            // Reset slider positions visually too
+            document.getElementById("baseSlider").value = 90;
+            document.getElementById("shoulderSlider").value = 90;
+        }
+    </script>
+</body>
+</html>
